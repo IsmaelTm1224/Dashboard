@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My app</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body class="min-h-screen bg-gray-50 font-sans px-8 py-12">
+    <div class="max-w-[1800px] mx-auto">
+      <h1 class="text-5xl font-bold mb-12 text-indigo-800">Student Academic Dashboard</h1>
+      
+      <!-- Summary Cards -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <h3 class="text-sm text-gray-500">Total Students</h3>
+          <p class="text-3xl font-bold text-indigo-600">20</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <h3 class="text-sm text-gray-500">Passing Rate</h3>
+          <p class="text-3xl font-bold text-green-600">65%</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <h3 class="text-sm text-gray-500">Avg GPA</h3>
+          <p class="text-3xl font-bold text-blue-600">77.2</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <h3 class="text-sm text-gray-500">Avg Attendance</h3>
+          <p class="text-3xl font-bold text-purple-600">83.1%</p>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-10">
+        <!-- Passing Status -->
+        <div class="bg-white p-4 rounded-lg shadow-sm">
+          <h3 class="text-md font-semibold mb-3">Approval Status</h3>
+          <div class="h-80">
+            <canvas id="statusChart"></canvas>
+          </div>
+        </div>
+        
+        <!-- GPA Distribution -->
+        <div class="bg-white p-4 rounded-lg shadow-sm">
+          <h3 class="text-md font-semibold mb-3">GPA Ranges</h3>
+          <div class="h-80">
+            <canvas id="gpaChart"></canvas>
+          </div>
+        </div>
+        
+        <!-- Attendance vs GPA -->
+        <div class="bg-white p-4 rounded-lg shadow-sm">
+          <h3 class="text-md font-semibold mb-3">Attendance vs GPA</h3>
+          <div class="h-80">
+            <canvas id="scatterChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detailed Table -->
+      <div class="bg-white p-8 rounded-xl shadow-md">
+        <h2 class="text-2xl font-bold mb-6 text-gray-800">Detailed Student Records</h2>
+        <div class="overflow-x-auto">
+          <table class="min-w-full bg-white border border-gray-200 rounded-lg overflow-hidden">
+          <thead class="bg-indigo-600 text-white">
+            <tr>
+              <th class="py-3 px-4 text-left">ID</th>
+              <th class="py-3 px-4 text-left">Name</th>
+              <th class="py-3 px-4 text-left">Age</th>
+              <th class="py-3 px-4 text-left">Gender</th>
+              <th class="py-3 px-4 text-left">Grade</th>
+              <th class="py-3 px-4 text-left">GPA</th>
+              <th class="py-3 px-4 text-left">Attendance</th>
+              <th class="py-3 px-4 text-left">Status</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <tr class="hover:bg-gray-50">
+              <td class="py-4 px-4">Estonia</td>
+              <td class="py-4 px-4">Ana Gómez</td>
+              <td class="py-4 px-4">17</td>
+              <td class="py-4 px-4">F</td>
+              <td class="py-4 px-4">4to A</td>
+              <td class="py-4 px-4">65.23</td>
+              <td class="py-4 px-4">61.81%</td>
+              <td class="py-4 px-4"><span class="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">Reprobado</span></td>
+            </tr>
+            <!-- Additional rows would follow the same pattern -->
+            <tr class="hover:bg-gray-50">
+              <td class="py-4 px-4">Estonia</td>
+              <td class="py-4 px-4">Carlos Rodríguez</td>
+              <td class="py-4 px-4">15</td>
+              <td class="py-4 px-4">M</td>
+              <td class="py-4 px-4">4to A</td>
+              <td class="py-4 px-4">95.80</td>
+              <td class="py-4 px-4">81.84%</td>
+              <td class="py-4 px-4"><span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Aprobado</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <script>
+      // Common chart options
+      const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom' }
+        }
+      };
+
+      // Status Chart
+      new Chart(document.getElementById('statusChart'), {
+        type: 'pie',
+        data: {
+          labels: ['Approved', 'Failed'],
+          datasets: [{
+            data: [13, 7],
+            backgroundColor: [
+              '#10b981',
+              '#ef4444'
+            ],
+            borderWidth: 0
+          }]
+        },
+        options: chartOptions
+      });
+
+      // GPA Distribution Chart
+      new Chart(document.getElementById('gpaChart'), {
+        type: 'bar',
+        data: {
+          labels: ['50-59', '60-69', '70-79', '80-89', '90-100'],
+          datasets: [{
+            label: 'Students',
+            data: [3, 4, 3, 6, 4],
+            backgroundColor: '#6366f1',
+            borderRadius: 6
+          }]
+        },
+        options: {
+          ...chartOptions,
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: { stepSize: 1 }
+            }
+          }
+        }
+      });
+
+      // Scatter Chart (Attendance vs GPA)
+      new Chart(document.getElementById('scatterChart'), {
+        type: 'scatter',
+        data: {
+          datasets: [{
+            label: 'Students',
+            data: [
+              {x:61.81,y:65.23}, {x:73.01,y:54.88}, {x:81.84,y:95.80}, 
+              {x:67.56,y:85.69}, {x:97.52,y:82.15}, {x:77.46,y:58.28},
+              {x:98.95,y:91.31}, {x:99.53,y:84.75}, {x:71.45,y:87.60},
+              {x:88.29,y:62.41}, {x:85.16,y:75.46}, {x:91.21,y:70.83},
+              {x:72.64,y:97.93}, {x:87.25,y:58.52}, {x:95.57,y:65.53},
+              {x:90.15,y:59.15}, {x:77.86,y:85.90}, {x:91.61,y:94.13},
+              {x:81.17,y:88.80}, {x:79.90,y:89.90}, {x:71.90,y:78.59},
+              {x:94.92,y:92.91}
+            ],
+            backgroundColor: '#6366f1',
+            pointRadius: 6
+          }]
+        },
+        options: {
+          ...chartOptions,
+          scales: {
+            x: {
+              title: { display: true, text: 'Attendance %' },
+              min: 50,
+              max: 100
+            },
+            y: {
+              title: { display: true, text: 'GPA' },
+              min: 50,
+              max: 100
+            }
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
